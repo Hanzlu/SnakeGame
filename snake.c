@@ -9,7 +9,8 @@ int i = 0; //for for loops
 
 void endGame(int points) {
 	system("cls");
-	printf("Game Over!\nYou got: %d points", points);
+	printf("Game Over!\nYou got: %d points\nPress any key to close...", points);
+	getch();
 	exit(0);
 }
 
@@ -39,13 +40,10 @@ void loadScreen(char *screen) {
 int moveSnake(char *screen, int *sLoc, int hLoc, int dir, int points, int *fruitEaten) {
 	
 	//get new head location 
-	//check if snake crash into wall
+	//check if snake crash into left or right wall
 	switch (dir) {
 		case 1:
 			hLoc -= 10;
-			if (hLoc < 0) {
-				endGame(points);
-			}
 			break;
 		case 2:
 			hLoc++;
@@ -55,9 +53,6 @@ int moveSnake(char *screen, int *sLoc, int hLoc, int dir, int points, int *fruit
 			break;
 		case 3:
 			hLoc += 10;
-			if (hLoc > 99) {
-				endGame(points);
-			}
 			break;
 		case 4:
 			hLoc--;
@@ -65,6 +60,12 @@ int moveSnake(char *screen, int *sLoc, int hLoc, int dir, int points, int *fruit
 				endGame(points);
 			}
 	}
+	
+	//check if snake crashed into top or bottom wall
+	if (hLoc < 0 || hLoc > 100) {
+		endGame(points);
+	}
+	
 	
 	//check if snake crash into body
 	if (screen[hLoc] == '0') {
@@ -117,6 +118,9 @@ int updateFruit(char *screen, int *sLoc, int fLoc, int points) {
 //-------------------------------------------------------------------------------
 
 int main(){
+	printf("Press any key to start...");
+	getch();
+	system("cls");
 	
 	char screen[100];
 	//initialize screen with spaces
@@ -142,11 +146,7 @@ int main(){
 		//check if key pressed		
 		if (kbhit()) {
 			switch(getch()) {
-				
-				//t key, terminate
-				case 116:
-					endGame(points);
-					break;
+			
 				//w key, up
 				case 119:
 					direction = (direction == 3) ? 3 : 1;
@@ -162,6 +162,14 @@ int main(){
 				//a key, left	
 				case 97:
 					direction = (direction == 2) ? 2 : 4;
+					break;
+				//t key, terminate
+				case 116:
+					endGame(points);
+					break;
+				//p key, pause
+				case 112:
+					getch();
 			}
 		}
 		
